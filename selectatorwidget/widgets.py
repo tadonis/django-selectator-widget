@@ -21,7 +21,7 @@ except ImportError:  # python3
 
 __all__ = ('Selectator', 'SelectatorMultiple')
 
-selectator_options = {
+_selectator_options = {
     'prefix': 'selectator_',  # CSS class prefix
     'height': 'auto',  # auto or element
     'useDimmer': False,  # dims the screen when option list is visible
@@ -37,7 +37,7 @@ selectator_options = {
     },
 }
 
-js_template = '''
+_js_template = '''
     <script>
         (function(window) {
             var callback = function() {
@@ -52,7 +52,7 @@ js_template = '''
     </script>'''
 
 
-class GMedia(object):
+class _GMedia(object):
     js = ['project_manager/lib/jquery/jquery-2.1.3.min.js',
           'project_manager/lib/selectator/fm.selectator.jquery.js',
           ]
@@ -61,10 +61,10 @@ class GMedia(object):
 
 class Selectator(Select):
     class Media(object):
-        js = GMedia.js
-        css = GMedia.css
+        js = _GMedia.js
+        css = _GMedia.css
 
-    def __init__(self, attrs=None, choices=(), options=selectator_options):
+    def __init__(self, attrs=None, choices=(), options=_selectator_options):
         super(Selectator, self).__init__(attrs=attrs, choices=choices)
         self.options = options
 
@@ -75,7 +75,7 @@ class Selectator(Select):
             attrs.update({'id': uuid.uuid1()})
         dom_id = attrs['id']
         html = super(Selectator, self).render(name, value, attrs=attrs)
-        js = js_template % dict(
+        js = _js_template % dict(
             selectator_id=dom_id,
             options=json.dumps(self.options),
         )
@@ -84,10 +84,10 @@ class Selectator(Select):
 
 class SelectatorMultiple(SelectMultiple):
     class Media(object):
-        js = GMedia.js
-        css = GMedia.css
+        js = _GMedia.js
+        css = _GMedia.css
 
-    def __init__(self, attrs=None, choices=(), options=selectator_options):
+    def __init__(self, attrs=None, choices=(), options=_selectator_options):
         super(SelectatorMultiple, self).__init__(attrs=attrs, choices=choices)
         self.options = options
 
@@ -100,7 +100,7 @@ class SelectatorMultiple(SelectMultiple):
         dom_id = attrs['id']
 
         html = super(SelectatorMultiple, self).render(name, value, attrs=attrs)
-        js = js_template % dict(
+        js = _js_template % dict(
             selectator_id=dom_id,
             options=json.dumps(self.options),
         )
