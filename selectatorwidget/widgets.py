@@ -41,7 +41,7 @@ _js_template = '''
     <script>
         (function(window) {
             var callback = function() {
-                $(function(){$("#%(selectator_id)s").selectator(%(options)s);});
+                $(function(){$("select[id='%(selectator_id)s']").selectator(%(options)s);});
             };
             if(window.addEventListener)
                 window.addEventListener("load", callback, false);
@@ -74,6 +74,8 @@ class Selectator(Select):
         if 'id' not in attrs:
             attrs.update({'id': uuid.uuid1()})
         dom_id = attrs['id']
+        if dom_id.find('__prefix__') != -1:
+            return super(Selectator, self).render(name, value, attrs=attrs)
         html = super(Selectator, self).render(name, value, attrs=attrs)
         js = _js_template % dict(
             selectator_id=dom_id,
@@ -92,7 +94,6 @@ class SelectatorMultiple(SelectMultiple):
         self.options = options
 
     def render(self, name, value, attrs=None, choices=()):
-        print(value)
         if attrs is None:
             attrs = {}
         if 'id' not in attrs:
